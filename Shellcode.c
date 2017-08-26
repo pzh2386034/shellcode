@@ -35,7 +35,7 @@ void* GetProcAddrByHash( PVOID LibBaseAddr, DWORD FnHash );
 PVOID GetKernel32Base(void);
 
 //-------------------------------------------------------------------------
-void __declspec(naked) StartSign (){}
+/* void __declspec(naked) StartSign (){} */
 //-------------------------------------------------------------------------
 
 void ShellCode(void)
@@ -237,6 +237,7 @@ void main(void)
 
     ShellCodeSize = (DWORD)EndSign - (DWORD)StartSign;
     ShellCodeToHex ( (BYTE *)ShellCode, ShellCodeSize, stdout );
-    // ShellCode();
+    getchar();
+    ShellCode();
 }
 
