@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "utility.h"
 
 using namespace std;
 class italian_sandwich
@@ -54,7 +55,9 @@ void save_sandwich(const italian_sandwich & sw, const string & file_name)
 int main()
 {
   string filename("pan12.xml");
-  italian_sandwich isand("shalasandwisuh", "apple", 1);
-  isand.Save(filename);
+  // italian_sandwich isand("shalasandwisuh", "apple", 1);
+  // isand.Save(filename);
+  char tmpfile[121];
+  create_temp_file(filename.c_str(), tmpfile, 121);
   return 0;
 }

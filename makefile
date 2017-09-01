@@ -1,8 +1,8 @@
 CPP=g++
 CC=gcc
 
-CPPFLAG=-I. -g
-CFLAG=-I. -g
+CPPFLAG=-I. -g -Isrc/include
+CFLAG=-I. -g -Isrc/include
 
 LDIR=/usr/local/lib
 LIBS=-lboost_regex -lboost_serialization
