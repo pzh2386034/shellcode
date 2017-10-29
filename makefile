@@ -1,15 +1,14 @@
 CPP=g++
 CC=gcc
 
-CPPFLAG=-I. -g -Isrc/include
-CFLAG=-I. -g -Isrc/include
-
-LDIR=/usr/local/lib
-LIBS=-lboost_regex -lboost_serialization
-
 DEPS=
 SRC=./src
+UTILITY=${SRC}/utility
 ODIR=obj
+LDIR=${SRC}/../lib
+LIBS=-lboost_serialization
+CPPFLAG=-I. -g -I${SRC}/include -L${LDIR}
+CFLAG=-I. -g -I${SRC}/include
 # get Cpp file
 SRC_CPP=$(wildcard *.cpp $(SRC)/*.cpp)
 SRC_NODIR_CPP=$(notdir $(SRC_CPP))
@@ -27,6 +26,9 @@ $(ODIR)/%.o:$(SRC)/%.c $(DEPS)
 
 example:$(OBJ_CPP) $(OBJ_C)
 	$(CPP) -o $@ $^ $(LIBS) $(CPPFLAG)
+
+utilit.so: src/utility.c
+	$(CC) -shared -fPIC -c -o $@ $< $(CFLAG) 
 
 .PHONY:clean
 

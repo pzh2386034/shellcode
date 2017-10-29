@@ -20,7 +20,7 @@ build_boost()
 build_install()
 {
     echo "make install complete, install head file to system thirdpart dir"
-    cp ${path}/${SOURCE_NAME}/boost ${path}/../../src/include
+    cp -r ${path}/${SOURCE_NAME}/boost ${path}/../../src/include
     cp ${path}/${SOURCE_NAME}/stage/lib/libboost_serialization.so ${path}/../../lib
 }
 build_clean()
@@ -30,6 +30,6 @@ build_clean()
 build_all()
 {
     build_boost
-    build_clean
+    build_install
 }
 build_$1
