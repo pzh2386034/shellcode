@@ -110,6 +110,18 @@ build_install_php_x86()
     cd -
     sleep 5
 }
+build_add_virtualNet()
+{
+    sudo cat >> /etc/network/interfaces <<EOF
+auto eth0:0
+iface eth0:0 inet static
+address 192.168.100.10
+netmask 255.255.255.0
+#network 192.168.10.1
+#broadcast 192.168.1.255
+EOF
+    sudo /etc/init.d/networking restart
+}
 build_config()
 {
     cat >> ${X86_INSTALL}/${HTTPD}/conf/httpd.conf <<EOF
@@ -118,12 +130,18 @@ LoadModule php7_module modules/libphp7.so
     SetHandler application/x-httpd-php
 </FilesMatch>
 EOF
+    #如果使用无线网络，则需要配置虚拟网卡，打开以下操作
+    ##临时添加虚拟网卡
+    #sudo ifconfig eth0:0 192.168.100.10 up
+    #build_add_virtualNet
+    #sed -n '/^Liston 80/p' ${X86_INSTALL}/${HTTPD}/conf/http.conf | sed 's/80/192.168.100.10:80/g'
 }
+
 build_start()
 {
     #必须有root权限
     sudo cp ${X86_INSTALL}/${HTTPD}/bin/apachectl /etc/init.d/httpd
-    ${X86_INSTALL}/${HTTPD}/bin/apachectl start
+    sudo ${X86_INSTALL}/${HTTPD}/bin/apachectl start
 }
 build_install_x86()
 {
