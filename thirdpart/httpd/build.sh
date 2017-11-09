@@ -5,7 +5,8 @@ APR=apr-1.6.3
 APR_UTIL=apr-util-1.6.1
 APR_ICONV=apr-iconv-1.2.2
 PCRE=pcre-8.41
-PHP=php-7.1.11
+PHP7=php-7.1.11
+PHP5=php-5.6.32
 LIBXML=libxml2-2.9.6
 APPEND=tar.gz
 
@@ -20,6 +21,7 @@ download()
     wget http://mirror.bit.edu.cn/apache//apr/apr-iconv-1.2.2.tar.gz
     wget http://ftp.exim.llorien.org/pcre/pcre-8.41.tar.gz
     wget http://cn2.php.net/get/php-7.1.11.tar.gz/from/this/mirror
+    wget http://cn2.php.net/get/php-5.6.32.tar.gz/from/this/mirror
     wget http://xmlsoft.org/sources/libxml2-sources-2.9.6.tar.gz -o libxml2-2.9.6.tar.gz
 }
 build_install_apr_x86()
@@ -94,19 +96,36 @@ build_install_libxml2_x86()
     cd -
     sleep 5
 }
-build_install_php_x86()
+build_install_php7_x86()
 {
-    [ -f ${PHP}.${APPEND} ] || download
-    tar xzf ${PHP}.${APPEND}
-    cd ${PHP}
-    ./configure  --prefix=${X86_INSTALL}/${PHP} --with-apxs2=${X86_INSTALL}/${HTTPD}/bin/apxs --with-mysql=/usr/share/mysql --includedir=${X86_INSTALL}/${HTTPD}/include --with-config-file-path=${X86_INSTALL}/${HTTPD}/conf/extra --without-pear --disable-inline-optimization --enable-zend-multibyte=no --disable-cgi --disable-ipv6 --without-sqlite3 --disable-cli --enable-dba=no --without-pdo-sqlit --enable-opcache=no --disable-pdo --enable-test_module=no --disable-FEATURE --disable-rpath --enable-ftp=no --with-xmlrpc --with-libxml-dir=${X86_INSTALL}/libxml2 --enable-libxml --enable-maintainer-zts --enable-dom --enable-simplexml --enable-xml --enable-xmlreader --enable-xmlwriter || exit 1
-    sudo apt install python-dev
+    [ -f ${PHP7}.${APPEND} ] || download
+    tar xzf ${PHP7}.${APPEND}
+    cd ${PHP7}
+    ./configure  --prefix=${X86_INSTALL}/${PHP7} --with-apxs2=${X86_INSTALL}/${HTTPD}/bin/apxs --with-mysql=/usr/share/mysql --includedir=${X86_INSTALL}/${HTTPD}/include --with-config-file-path=${X86_INSTALL}/${HTTPD}/conf/extra --without-pear --disable-inline-optimization --enable-zend-multibyte=no --disable-ipv6 --without-sqlite3 --enable-dba=no --without-pdo-sqlit --enable-opcache=no --disable-pdo --disable-FEATURE --disable-rpath --enable-ftp=no --with-xmlrpc --with-libxml-dir=${X86_INSTALL}/libxml2 --enable-libxml --enable-maintainer-zts --enable-dom --enable-simplexml --enable-xml --enable-xmlreader --enable-xmlwriter --enable-so || exit 1
+    #sudo apt install python-dev
     make || exit 1
     #如果不使用root用户，install会异常，但是并不影响使用
     make install
-    echo "install ${PHP} X86 success"
+    echo "install ${PHP7} X86 success"
     cp php.ini-development ${X86_INSTALL}/${HTTPD}/conf/extra/php.ini
     cp .libs/libphp7.so ${X86_INSTALL}/${HTTPD}/modules
+    cd -
+    sleep 5
+}
+build_install_php5_x86()
+{
+    [ -f ${PHP5}.${APPEND} ] || download
+    tar xzf ${PHP5}.${APPEND}
+    cd ${PHP5}
+    #apt install libmysqlclient-dev
+    ./configure  --prefix=${X86_INSTALL}/${PHP5} --with-apxs2=${X86_INSTALL}/${HTTPD}/bin/apxs --with-mysql=/usr --includedir=${X86_INSTALL}/${HTTPD}/include --with-config-file-path=${X86_INSTALL}/${HTTPD}/conf/extra --without-pear --disable-inline-optimization --enable-zend-multibyte=no --disable-ipv6 --without-sqlite3 --enable-dba=no --without-pdo-sqlit --enable-opcache=no --disable-pdo --disable-FEATURE --disable-rpath --enable-ftp=no --with-xmlrpc --with-libxml-dir=${X86_INSTALL}/libxml2 --enable-libxml --enable-maintainer-zts --enable-dom --enable-simplexml --enable-xml --enable-xmlreader --enable-xmlwriter --enable-so || exit 1
+    #sudo apt install python-dev
+    make || exit 1
+    #如果不使用root用户，install会异常，但是并不影响使用
+    make install
+    echo "install ${PHP5} X86 success"
+    cp php.ini-development ${X86_INSTALL}/${HTTPD}/conf/extra/php.ini
+    cp .libs/libphp5.so ${X86_INSTALL}/${HTTPD}/modules
     cd -
     sleep 5
 }
@@ -151,7 +170,7 @@ build_install_x86()
     build_install_pcre_x86
     build_install_httpd_x86
     build_install_libxml2_x86
-    build_install_php_x86
+    build_install_php5_x86
     build_config
 }
 $1
