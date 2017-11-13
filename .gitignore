@@ -2,3 +2,7 @@ GPATH
 GRTAGS
 GSYMS
 GTAGS
+build/*
+
+*.so*
+*.tar.gz

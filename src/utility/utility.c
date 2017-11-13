@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <utility.h>
+#include "utility.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -16,7 +16,6 @@ static m_link head = NULL;
 int create_temp_file(const char * filename, char * tmp, size_t len)
 {
   int tmpfile ;
-  char * delim = "/";
   mode_t prevmask;
   if (!filename || !tmp)
   {
@@ -66,6 +65,7 @@ m_link search(m_temp key)
         return p;
       }
   }
+  printf("can not find key\n");
   return NULL;
 }
 void insert(m_link p)
@@ -124,7 +124,7 @@ m_link m_pop(void)
       return p;
     }
 }
-//非阻塞读终端
+/*非阻塞读终端*/
 int read_tty(void)
 {
   char buf[10];
@@ -154,7 +154,7 @@ int read_tty(void)
   return 0;
 }
 
-//递归一个目录下的所有子目录
+/*递归一个目录下的所有子目录*/
 #define MAX_PATH 1024
 void dirwalk(char *dir, void (*fcn) (char *))
 {
@@ -181,21 +181,21 @@ void dirwalk(char *dir, void (*fcn) (char *))
     }
   closedir(dfd);
 }
-void fsize(char *name)
-{
-  struct stat stbuf;
-  if (stat(name, &stbuf) == -1)
-    {
-      printf("fsize: can not access %s\n", name);
-      return;
-    }
-  if ((stbuf.st_mode & S_IFMT) == S_IFDIR)
-    {
-      dirwalk(name, fsize);
-    }
-  printf("%8ld %s\n", stbuf.st_size, name);
-}
-//子进程函数
+/* void fsize(char *name) */
+/* { */
+/*   struct stat stbuf; */
+/*   if (stat(name, &stbuf) == -1) */
+/*     { */
+/*       printf("fsize: can not access %s\n", name); */
+/*       return; */
+/*     } */
+/*   if ((stbuf.st_mode & S_IFMT) == S_IFDIR) */
+/*     { */
+/*       dirwalk(name, fsize); */
+/*     } */
+/*   printf("%8ld %s\n", stbuf.st_size, name); */
+/* } */
+/*子进程函数*/
 void child_process(void)
 {
   pid_t pid;
